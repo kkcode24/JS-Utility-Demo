@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="gb2312" />
+		<title>时间轴特效</title>
+		<script type="text/javascript" src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+		<script>
+			function add_files(files) {
+				if (files.length) {
+					var file = files[0];
+					var reader = new FileReader();
+					reader.onload = function(e) {
+						document.getElementById("new_pic").innerHTML = '<img src="' + e.target.result + '" width="35px"/>';
+						a = '<img src="' + e.target.result + '" width="35px"/>'
+					}
+					reader.readAsDataURL(file);
+				}
+			}
+			$(document).ready(function() {
+				var ul;
+				li_index = 0;
+				$("#line").css("height", $(".box").height() + "px"); //更改中线的高度
+				$("#button").on("click", function() {
+					var l_ul_w = $("#left_ul").height();
+					var r_ul_w = $("#right_ul").height();
+					var user_name = $("#user_name").val();
+					var new_pic = $("#new_pic").html();
+					var word = $("#word").val();
+					if(user_name=="" || new_pic=="" ||new_pic=="" ){
+						alert('请填写【昵称】和【内容】，并选择一个图片作为【头像】')
+					}else{
+					if (l_ul_w <= r_ul_w) {
+						ul = $("#left_ul");
+						var l = "l";
+						li_index++;
+						add_li(l, li_index);
+					} else {
+						ul = $("#right_ul");
+						var r = "r";
+						li_index++;
+						add_li(r, li_index);
+					}
+					$("#line").css("height", $(".box").height() + "px");
+					}
+				})
+
+				function add_li(i, li_index) {
+					var user_name = $("#user_name").val();
+					var new_pic = $("#new_pic").html();
+					var word = $("#word").val();
+					var value = '<li id="li_' + li_index + '"><div class="title ' + i + '_title"><i class="pic ' + i + '_pic">' + new_pic + '</i><b class="user ' + i + '_user">' + user_name + '</b><a class="date r_date">2015年3月2号</a><a class="date ' + i + '_date"></a><a class="sjx ' + i + '_sjx"></a></div><div class="text">' + word + '</div></li>';
+					var li = "#li_" + li_index;
+					var val = "val_" + li_index;
+					console.log(value)
+					localStorage.setItem(val, value); //存储数据到本地
+					ul.append(value);
+				$("#line").css("height", $(".box").height() + "px"); //更改中线的高度					
+				}
+
+				function add_slef() {
+					var length = localStorage.length;
+					for (var i = 0; i < length + 1; i++) {
+						var l_ul_w = $("#left_ul").height();
+						var r_ul_w = $("#right_ul").height();
+						var li_key = "val_" + i;
+						var li_value = localStorage.getItem(li_key);
+						li_index = length;
+						if (l_ul_w <= r_ul_w) {
+							ul = $("#left_ul");
+							var l = "l";
+							ul.append(li_value);
+						} else {
+							ul = $("#right_ul");
+							var r = "r";
+							ul.append(li_value);
+						}
+						$("#line").css("height", $(".box").height() + "px");
+						li_index = i;
+					}
+				}
+				add_slef();
+			})
+		</script>
+		<style>
+			* {
+				margin: 0px;
+				padding: 0px;
+				font-family: "微软雅黑";
+				font-size: 12px;
+				color: #272727;
+				list-style-type: none;
+			}
+			#wrap {
+				width: 802px;
+				height: calc( 100vh - 400px);
+				margin: 10px auto;
+				border: 1px #BEBEBE solid;
+				overflow: scroll;
+				padding: 20px;
+			}
+			ul {
+				display: block;
+				float: left;
+				width: 400px;
+			}
+			#line {
+				width: 2px;
+				float: left;
+				height: auto;
+				background: #8E8E8E;
+				position: relative;
+			}
+			#line:before {
+				content: "";
+				width: 10px;
+				height: 10px;
+				border-radius: 50%;
+				border: 5px solid #8E8E8E;
+				background: #ffffff;
+				position: absolute;
+				top: -15px;
+				left: -9px;
+			}
+			li {
+				display: block;
+				min-width: 250px;
+				max-width: 400px;
+				margin-bottom: 25px;
+			}
+			.box{overflow: hidden;}
+			.title {
+				display: block;
+				width: inherit;
+				height: 35px;
+				padding: 5px;
+				line-height: 35px;
+				position: relative;
+				vertical-align: middle;
+				border-radius: 10px 10px 0 0;
+				border: 1px solid #8E8E8E;
+			}
+			.date {
+				display: block;
+				float: right;
+				z-index: 999;
+			}
+			.user {
+				max-width: 100px;
+				height: 35px;
+				overflow: hidden;
+				display: block;
+				float: left;
+				font-size: 15px;
+			}
+			.pic {
+				display: block;
+				width: 35px;
+				height: 35px;
+				overflow: hidden;
+				float: left;
+				margin: 0 5px;
+				border-radius: 50%;
+				box-shadow: 0 0 5px #272727;
+				background: url("https://img.alicdn.com/imgextra/i2/825197876/TB2Zu1reVXXXXa9XpXXXXXXXXXX_!!825197876.jpg") no-repeat center /cover;
+				background-size: 35px;
+				transition: all 0.5s;
+				-webkit-transition: all 0.5s;
+				-moz-transition: all 0.5s;
+				-ms-transition: all 0.5s;
+			}
+			#word{display: block;}
+			#new_pic {
+				display: inline-block;
+				width: 35px;
+				height: 35px;
+				overflow: hidden;
+				margin: 0 5px;
+				border-radius: 50%;
+				box-shadow: 0 0 5px #272727;
+				background-position: center;
+				background-repeat: no-repeat;
+			}
+			.title:hover .pic {
+				transform: rotate(360deg);
+				-webkit-transform: rotate(360deg);
+				-moz-transform: rotate(360deg);
+				-ms-transform: rotate(360deg);
+			}
+			.text {
+				width: inherit;
+				line-height: 20px;
+				margin-top: 5px;
+				padding: 10px;
+				border: 1px;
+				border: 1px solid #8E8E8E;
+				border-radius: 0 0 10px 10px;
+				max-height: 200px;
+				overflow: hidden;
+                                word-wrap: break-word;
+			}
+			.sjx {
+				display: block;
+				position: absolute;
+				margin-top: -2px;
+				width: 10px;
+				height: 10px;
+				background: #ffffff;
+				border: solid #8E8E8E;
+				transform: rotate(45deg);
+				-webkit-transform: rotate(45deg);
+				-moz-transform: rotate(45deg);
+				-ms-transform: rotate(45deg);
+			}
+			#left_ul>li {
+				float: right;
+				margin-right: 20px;
+			}
+			#right_ul>li {
+				float: left;
+				margin-left: 20px;
+			}
+			.l_sjx {
+				top: 50%;
+				right: -6px;
+				border-width: 1px 1px 0 0;
+			}
+			.r_sjx {
+				top: 50%;
+				left: -6px;
+				border-width: 0 0 1px 1px;
+			}
+			.l_title:before {
+				content: "";
+				width: 3px;
+				height: 3px;
+				border: 2px solid #8E8E8E;
+				background: #FFFFFF;
+				border-radius: 50%;
+				position: absolute;
+				top: 50%;
+				right: -25.5px;
+				z-index: 500;
+			}
+			.r_title:before {
+				content: "";
+				width: 3px;
+				height: 3px;
+				border: 2px solid #8E8E8E;
+				background: #FFFFFF;
+				border-radius: 50%;
+				position: absolute;
+				top: 50%;
+				left: -25.5px;
+				z-index: 500;
+			}
+			#right_ul {
+				margin-top: 80px;
+			}
+			#edit_wrap {
+				width: 800px;
+				height: 300px;
+				position: fixed;
+				bottom: 0;
+				left: 0;
+				transform: translateX(25%);
+				background: #FFFFFF;
+				border: 5px solid #272727;
+				z-index: 999;
+			}
+			#edit_wrap p {
+				display: block;
+				width: 300px;
+				height: 40px;
+				line-height: 40px;
+				float: left;
+				padding-top: 10px;
+			}
+			#user_name {
+				width: 150px;
+				height: 20px;
+				padding: 5px;
+				border: 1px solid #8E8E8E;
+				outline: none;
+			}
+			#open_pic_wrap {
+				width: 100px;
+				height: 25px;
+				line-height: 25px;
+				display: inline-block;
+				overflow: hidden;
+				border: 1px solid #8E8E8E;
+				position: relative;
+				cursor: pointer;
+				text-align: center;
+			}
+			#open_pic {
+				width: 100px;
+				height: 25px;
+				opacity: 0;
+				position: absolute;
+				top: 0;
+				left: 0;
+				z-index: 999;
+				cursor: pointer;
+			}
+			#button {
+				width: 100px;
+				height: 35px;
+				outline: none;
+				border: 1px #272727 solid;
+				cursor: pointer;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="wrap">
+			<div class="box">
+			<ul id="left_ul">
+				<li title="aaa">
+					<div class="title l_title">
+						<i class="pic l_pic"></i>
+						<b class="user l_user">小鱼</b>
+						<a class="date l_date">2015年3月2号</a>
+						<a class="sjx l_sjx"></a>
+					</div>
+					<div class="text">小鱼真特么帅</div>
+				</li>
+
+			</ul>
+			<div id="line"></div>
+			<ul id="right_ul">
+				<li>
+					<div class="title r_title">
+						<i class="pic r_pic"></i>
+						<b class="user r_user">小鱼</b>
+						<a class="date r_date">2015年3月2号</a>
+						<a class="sjx r_sjx"></a>
+					</div>
+					<div class="text">小鱼真特么聪明</div>
+				</li>
+
+			</ul>
+			</div>
+		</div>
+		<div id="edit_wrap">
+			<form>
+				<p>昵称：<input type="text" placeholder="请填写昵称" id="user_name" />
+				</p>
+				<p>头像：<a id="open_pic_wrap">
+						<input type="file" value="选择本地图片" id="open_pic" accept="image/x-png,image/jpeg,imge/gif" onchange="add_files(this.files)" />选择头像</a><i id="new_pic"></i></p>
+				<textarea rows="10" cols="80" placeholder="留言内容" id="word"></textarea>
+				<p>
+					<input type="button" name="button" id="button" value="发表" />
+				</p>
+			</form>
+		</div>
+	</body>
+
+</html>
