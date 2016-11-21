@@ -1,0 +1,105 @@
+<!DOCTYPE html > 
+<html> 
+<head> 
+<meta charset="gbk" /> 
+<title>js随机生成滚动发货记录</title> 
+<style type="text/css"> 
+*{ margin:0; padding:0;}
+body { font:12px/1.8 Arial; color:#666;}
+h1.tit-h1 { font-size:38px; text-align:center; margin:30px 0 15px; color:#f60;}
+li{ list-style:none;}
+.wrapper {padding:50px;}
+ul, li {margin:0;padding:0;list-style:none;font-size:12px;}
+</style> 
+<body> 
+<h1 class="tit-h1">js随机生成滚动发货记录</h1> 
+<div class="wrapper"> 
+
+
+<script>
+//公告滚动
+    var tt1;
+    function start(){
+        demo=document.getElementById("xdemo");
+        demo1=document.getElementById("xdemo1");
+        demo2=document.getElementById("xdemo2");
+        if(demo2==null){
+            return;
+        }        
+        ShowNum();
+        clearTimeout(tt1);
+        demo2.innerHTML=demo1.innerHTML;
+		
+        function mar(){
+            if(demo.scrollTop>=demo2.offsetHeight){
+                 demo.scrollTop=0;
+            }else{
+                demo.scrollTop++;
+            }
+        }
+        var tt2=setInterval(mar,20);
+        demo.onmousemove=function(){//demo.onmouseover
+            clearInterval(tt2);
+        }
+        demo.onmouseout=function(){
+            tt2=setInterval(mar,20);
+        }     
+    }
+	
+tt1=setTimeout(start,1000);
+//随机返回数组中的某个值
+function CreateRecord(obj){
+    return obj[Math.floor(Math.random()*obj.length)];
+}
+//取得当前日期 格式 yyyy-MM-dd
+function GetNowTime(){
+    var nowtime=new Date();
+    var nowstr=nowtime.getFullYear()+"-";
+    var nowmonth=nowtime.getMonth()+1;
+    if(nowmonth<10){
+        nowmonth="0"+nowmonth;
+    }
+    var nowdate=nowtime.getDate();
+    if(nowdate<10){
+        nowdate="0"+nowdate; 
+    }
+    nowstr+=nowmonth+"-"+nowdate;        
+    return nowstr;
+}
+//返回字符串
+function ShowNum(){
+    var mycars=new Array("张小姐 ","钟小姐 ","潘小姐 ","梁先生 ","吕小姐 ","傅小姐 ","曹小姐 ","冯小姐 ","魏小姐 ","郭先生 ",
+        "金小姐 ","张先生 ","伍小姐 ","黄小姐 ","余小姐 ","顾先生 ","胡小姐 ","万小姐 ","欧小姐 ","魏先生 ","宋小姐 ","曲小姐 ",
+        "田先生 ","孟小姐 ","龙小姐 ","方先生 ","蒲先生 ","冉小姐 ","穆小姐 ","吴小姐 ","赵小姐 ","姚小姐 ");    
+    var mycars2=new Array("安徽马鞍山市  ","山东滨州市 ","辽宁沈阳市 ","江西南昌市 ","湖南张家界市 ","湖北天门市 ","黑龙鸡西市 ","河北邢台市 ",
+    "浙江省绍兴市 ","辽宁省沈阳市 ","浙江省温州市 ","江苏省连云港 ","河南省郑州市 ","重庆市南川区 ","吉林省长春市 ","山东省烟台市 ","海南省海口市 ",
+    "广东省东莞市 ","山西省太原市 ","辽宁省沈阳市 ","广西河池市 ","广东肇庆市 ","甘肃天水市 ","福建莆田市 ","北京门头沟 ","陕西铜川市 ");
+    var mycars1=new Array("13","15","18");  
+	
+    var str="<ul>";
+    for(var i =0;i<mycars.length;i++){
+        var ph1=Math.floor(Math.random()*10);
+        str+="<li>"+CreateRecord(mycars)+CreateRecord(mycars1)+ph1+"****"+ReturnPhone()+" "+CreateRecord(mycars2)+GetNowTime()+" 已发货</li>";
+    }
+    str+="</ul>";
+	
+    document.getElementById("xdemo1").innerHTML=str;
+}
+//电话后4位的生成
+function ReturnPhone(){
+    var mastr=Math.floor(Math.random()*10000);
+    if(mastr<=1000){
+        mastr=ReturnPhone();
+    }
+    return mastr;
+}
+</script>
+
+<div id='xdemo' style="overflow: hidden; height:400px; width:210px;margin:0 auto;" >
+<div id='xdemo1'></div>
+<div id='xdemo2'></div>
+</div>
+
+</div> 
+</body> 
+</html>
